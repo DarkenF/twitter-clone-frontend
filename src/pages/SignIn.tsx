@@ -5,12 +5,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import Button from "@material-ui/core/Button";
 import PeopleIcon from '@material-ui/icons/PeopleOutline';
 import MessageIcon from '@material-ui/icons/ChatBubbleOutline';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import { ModalBlock } from '../components/ModalBlock';
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import TextField from "@material-ui/core/TextField";
 
 
 
@@ -74,21 +72,33 @@ export const useStylesSignIn = makeStyles((theme) => ({
     fontSize: 32,
     marginBottom: 60,
     marginTop: 20,
+  },
+  loginSideField: {
+    marginBottom: 18,
+  },
+  registerField: {
+    marginBottom: theme.spacing(5),
+  },
+  loginFormControl: {
+    marginBottom: theme.spacing(2),
   }
 }));
 
 
 const SignIn = () => {
-  const [open, setOpen] = useState(false);
-
   const classes = useStylesSignIn()
+  const [visibleModal, setVisibleModal] = useState<'signIn'|'signUp'>();
 
-  const handleClickOpen = () => {
-    setOpen(true)
+  const handleClickOpenSignIn = (): void => {
+    setVisibleModal('signIn')
   }
 
-  const handleClickClose = () => {
-    setOpen(false)
+  const handleClickOpenSignUp = (): void => {
+    setVisibleModal('signUp')
+  }
+
+  const handleCloseModal = () : void => {
+    setVisibleModal(undefined)
   }
 
   return(
@@ -126,22 +136,96 @@ const SignIn = () => {
             <b>Присоединяйтесь к Твиттеру прямо сейчас!</b>
           </Typography>
           <br/>
-          <Button style={{marginBottom: 20}} variant="contained" color="primary" fullWidth>Зарегистрироваться</Button>
-          <Button onClick={handleClickOpen} variant="outlined" color="primary" fullWidth>Войти</Button>
-          <Dialog open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">
-              <IconButton onClick={handleClickClose} color="secondary" aria-label="close">
-                <CloseIcon style={{ fontSize: 26 }} color="secondary" />
-              </IconButton>
-              Настройка поиска
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, nulla.
-              </DialogContentText>
-            </DialogContent>
-          </Dialog>
-
+          <Button onClick={handleClickOpenSignUp} style={{marginBottom: 20}} variant="contained" color="primary" fullWidth>Зарегистрироваться</Button>
+          <Button onClick={handleClickOpenSignIn} variant="outlined" color="primary" fullWidth>Войти</Button>
+          <ModalBlock
+            visible={visibleModal === 'signIn'}
+            title="Войти в Твиттер"
+            classes={classes}
+            onClose={handleCloseModal}
+          >
+              <FormControl className={classes.loginFormControl} component="fieldset" fullWidth>
+                <FormGroup aria-label="position" row>
+                  <TextField
+                    className={classes.loginSideField}
+                    autoFocus
+                    id="email"
+                    label="E-Mail"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    variant="filled"
+                    type="email"
+                    fullWidth
+                  />
+                  <TextField
+                    className={classes.loginSideField}
+                    autoFocus
+                    id="password"
+                    label="Пароль"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    variant="filled"
+                    type="password"
+                    fullWidth
+                  />
+                  <Button onClick={handleCloseModal} color="primary" variant="contained" fullWidth>
+                    Войти
+                  </Button>
+                </FormGroup>
+              </FormControl>
+          </ModalBlock>
+          <ModalBlock
+            visible={visibleModal === 'signUp'}
+            title="Создайте учетную запись"
+            classes={classes}
+            onClose={handleCloseModal}
+          >
+            <FormControl className={classes.loginFormControl} component="fieldset" fullWidth>
+              <FormGroup aria-label="position" row>
+                <TextField
+                  className={classes.registerField}
+                  autoFocus
+                  id=""
+                  label="Имя"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="name"
+                  fullWidth
+                />
+                <TextField
+                  className={classes.registerField}
+                  autoFocus
+                  id="email"
+                  label="E-Mail"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="email"
+                  fullWidth
+                />
+                <TextField
+                  className={classes.registerField}
+                  autoFocus
+                  id="password"
+                  label="Пароль"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="filled"
+                  type="password"
+                  fullWidth
+                />
+                <Button onClick={handleCloseModal} color="primary" variant="contained" fullWidth>
+                  Далее
+                </Button>
+              </FormGroup>
+            </FormControl>
+          </ModalBlock>
         </div>
       </section>
     </div>
